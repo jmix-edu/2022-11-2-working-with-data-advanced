@@ -1,17 +1,27 @@
 package com.company.jmixpm.entity;
 
+import com.company.jmixpm.datatype.ProjectLabels;
+import io.jmix.core.DeletePolicy;
+import io.jmix.core.annotation.DeletedBy;
+import io.jmix.core.annotation.DeletedDate;
 import io.jmix.core.entity.annotation.JmixGeneratedValue;
+import io.jmix.core.entity.annotation.OnDelete;
+import io.jmix.core.metamodel.annotation.Composition;
 import io.jmix.core.metamodel.annotation.InstanceName;
 import io.jmix.core.metamodel.annotation.JmixEntity;
+import io.jmix.core.metamodel.annotation.PropertyDatatype;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
+import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 @JmixEntity
 @Table(name = "PROJECT", indexes = {
-        @Index(name = "IDX_PROJECT_MANAGER", columnList = "MANAGER_ID")
+        @Index(name = "IDX_PROJECT_MANAGER", columnList = "MANAGER_ID"),
+        @Index(name = "IDX_PROJECT_UNQ_NAME", columnList = "NAME", unique = true)
 })
 @Entity
 public class Project {
@@ -19,6 +29,9 @@ public class Project {
     @Column(name = "ID", nullable = false)
     @Id
     private UUID id;
+
+    @Column(name = "PROJECT_STATUS")
+    private Integer projectStatus;
 
     @NotNull
     @InstanceName
@@ -35,6 +48,79 @@ public class Project {
     @JoinColumn(name = "MANAGER_ID", nullable = false)
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private User manager;
+
+    @JoinTable(name = "PROJECT_USER_LINK",
+            joinColumns = @JoinColumn(name = "PROJECT_ID", referencedColumnName = "ID"),
+            inverseJoinColumns = @JoinColumn(name = "USER_ID", referencedColumnName = "ID"))
+    @ManyToMany
+    private List<User> participants;
+
+    @OnDelete(DeletePolicy.CASCADE)
+    @Composition
+    @OneToMany(mappedBy = "project")
+    private List<Task> tasks;
+
+    //    @Convert(converter = ProjectLabelsConverter.class)
+    @PropertyDatatype("projectLabels")
+    @Column(name = "PROJECT_LABELS")
+    private ProjectLabels projectLabels;
+
+    @DeletedBy
+    @Column(name = "DELETED_BY")
+    private String deletedBy;
+
+    @DeletedDate
+    @Column(name = "DELETED_DATE")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date deletedDate;
+
+    public Date getDeletedDate() {
+        return deletedDate;
+    }
+
+    public void setDeletedDate(Date deletedDate) {
+        this.deletedDate = deletedDate;
+    }
+
+    public String getDeletedBy() {
+        return deletedBy;
+    }
+
+    public void setDeletedBy(String deletedBy) {
+        this.deletedBy = deletedBy;
+    }
+
+    public ProjectLabels getProjectLabels() {
+        return projectLabels;
+    }
+
+    public void setProjectLabels(ProjectLabels projectLabels) {
+        this.projectLabels = projectLabels;
+    }
+
+    public List<Task> getTasks() {
+        return tasks;
+    }
+
+    public void setTasks(List<Task> tasks) {
+        this.tasks = tasks;
+    }
+
+    public List<User> getParticipants() {
+        return participants;
+    }
+
+    public void setParticipants(List<User> participants) {
+        this.participants = participants;
+    }
+
+    public ProjectStatus getProjectStatus() {
+        return projectStatus == null ? null : ProjectStatus.fromId(projectStatus);
+    }
+
+    public void setProjectStatus(ProjectStatus projectStatus) {
+        this.projectStatus = projectStatus == null ? null : projectStatus.getId();
+    }
 
     public User getManager() {
         return manager;

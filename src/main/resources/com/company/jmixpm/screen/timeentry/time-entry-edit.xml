@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <window xmlns="http://jmix.io/schema/ui/window"
-        caption="msg://taskEdit.caption"
+        caption="msg://timeEntryEdit.caption"
         focusComponent="form">
     <data>
-        <instance id="taskDc"
-                  class="com.company.jmixpm.entity.Task">
+        <instance id="timeEntryDc"
+                  class="com.company.jmixpm.entity.TimeEntry">
             <fetchPlan extends="_base">
-                <property name="assignee" fetchPlan="_base"/>
+                <property name="task" fetchPlan="_base"/>
+                <property name="user" fetchPlan="_base"/>
             </fetchPlan>
             <loader/>
         </instance>
@@ -27,19 +28,23 @@
     <dialogMode height="600"
                 width="800"/>
     <layout spacing="true" expand="editActions">
-        <form id="form" dataContainer="taskDc">
+        <form id="form" dataContainer="timeEntryDc">
             <column width="350px">
-                <textField id="nameField" property="name"/>
-                <entityPicker id="assigneeField" property="assignee">
+                <entityPicker id="taskField" property="task">
                     <actions>
                         <action id="entityLookup" type="entity_lookup"/>
                         <action id="entityClear" type="entity_clear"/>
                     </actions>
                 </entityPicker>
-                <dateField id="startDateField" property="startDate"/>
-                <textField id="estimatedEffortsField" property="estimatedEfforts"/>
-                <comboBox id="labelField" property="label"/>
-                <checkBox id="isClosedField" property="isClosed"/>
+                <textField id="timeSpentField" property="timeSpent"/>
+                <dateField id="entryDateField" property="entryDate"/>
+                <entityPicker id="userField" property="user">
+                    <actions>
+                        <action id="entityLookup" type="entity_lookup"/>
+                        <action id="entityClear" type="entity_clear"/>
+                    </actions>
+                </entityPicker>
+                <textArea id="descriptionField" property="description" rows="5"/>
             </column>
         </form>
         <hbox id="editActions" spacing="true">
