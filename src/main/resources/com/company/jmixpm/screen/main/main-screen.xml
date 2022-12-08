@@ -42,6 +42,7 @@
                       stylename="jmix-workarea"
                       height="100%">
                 <initialLayout spacing="true" margin="true">
+
                 </initialLayout>
             </workArea>
         </cssLayout>

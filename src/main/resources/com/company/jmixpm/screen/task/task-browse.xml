@@ -54,6 +54,8 @@
                 <column id="label"/>
                 <column id="project"/>
                 <column id="isClosed"/>
+                <column id="project.projectLabels"/>
+                <column id="supposedEndDate"/>
             </columns>
             <simplePagination/>
             <buttonsPanel id="buttonsPanel"

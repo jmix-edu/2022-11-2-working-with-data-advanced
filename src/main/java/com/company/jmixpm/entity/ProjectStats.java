@@ -9,10 +9,13 @@ import java.util.UUID;
 
 @JmixEntity(annotatedPropertiesOnly = true)
 public class ProjectStats {
+
+    @JmixProperty
     @JmixGeneratedValue
     @JmixId
     private UUID id;
 
+    @JmixProperty
     private String projectName;
 
     @JmixProperty

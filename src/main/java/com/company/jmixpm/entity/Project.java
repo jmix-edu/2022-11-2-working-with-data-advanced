@@ -1,6 +1,8 @@
 package com.company.jmixpm.entity;
 
 import com.company.jmixpm.datatype.ProjectLabels;
+import com.company.jmixpm.validation.ProjectLabelsSize;
+import com.company.jmixpm.validation.ValidDateProject;
 import io.jmix.core.DeletePolicy;
 import io.jmix.core.annotation.DeletedBy;
 import io.jmix.core.annotation.DeletedDate;
@@ -10,6 +12,7 @@ import io.jmix.core.metamodel.annotation.Composition;
 import io.jmix.core.metamodel.annotation.InstanceName;
 import io.jmix.core.metamodel.annotation.JmixEntity;
 import io.jmix.core.metamodel.annotation.PropertyDatatype;
+import io.jmix.core.validation.group.UiCrossFieldChecks;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -18,6 +21,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+@ValidDateProject(groups = UiCrossFieldChecks.class)
 @JmixEntity
 @Table(name = "PROJECT", indexes = {
         @Index(name = "IDX_PROJECT_MANAGER", columnList = "MANAGER_ID"),
@@ -29,6 +33,9 @@ public class Project {
     @Column(name = "ID", nullable = false)
     @Id
     private UUID id;
+
+    @Column(name = "TOTAL_ESTIMATED_EFFORTS")
+    private Integer totalEstimatedEfforts;
 
     @Column(name = "PROJECT_STATUS")
     private Integer projectStatus;
@@ -61,6 +68,7 @@ public class Project {
     private List<Task> tasks;
 
     //    @Convert(converter = ProjectLabelsConverter.class)
+    @ProjectLabelsSize(min = 2, max = 5)
     @PropertyDatatype("projectLabels")
     @Column(name = "PROJECT_LABELS")
     private ProjectLabels projectLabels;
@@ -73,6 +81,14 @@ public class Project {
     @Column(name = "DELETED_DATE")
     @Temporal(TemporalType.TIMESTAMP)
     private Date deletedDate;
+
+    public Integer getTotalEstimatedEfforts() {
+        return totalEstimatedEfforts;
+    }
+
+    public void setTotalEstimatedEfforts(Integer totalEstimatedEfforts) {
+        this.totalEstimatedEfforts = totalEstimatedEfforts;
+    }
 
     public Date getDeletedDate() {
         return deletedDate;

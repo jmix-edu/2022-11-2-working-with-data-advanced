@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<window xmlns="http://jmix.io/schema/ui/window"
+        xmlns:c="http://jmix.io/schema/ui/jpql-condition"
+        caption="msg://customerSearchScreen.caption">
+    <data>
+        <collection id="customersDc"
+                    class="com.company.jmixpm.entity.Customer">
+            <fetchPlan extends="_base"/>
+            <loader id="customersDl">
+                <query>
+                    <![CDATA[select e from Customer e]]>
+                </query>
+            </loader>
+        </collection>
+        <collection id="ordersDc"
+                    class="com.company.jmixpm.entity.Order">
+            <fetchPlan extends="_base">
+                <property name="customer" fetchPlan="_base"/>
+            </fetchPlan>
+            <loader id="ordersDl">
+                <query>
+                    <![CDATA[select e from Order_ e where e.customer = :container_customersDc]]>
+                </query>
+            </loader>
+        </collection>
+    </data>
+    <facets>
+        <dataLoadCoordinator auto="true">
+            <refresh loader="customersDl">
+                <onScreenEvent type="Init"/>
+            </refresh>
+        </dataLoadCoordinator>
+    </facets>
+    <layout expand="ordersTable" spacing="true">
+        <entityComboBox id="customerField" caption="Customer" optionsContainer="customersDc"/>
+            <table id="ordersTable"
+                   dataContainer="ordersDc"
+                   width="100%">
+                <columns>
+                    <column id="orderNumber"/>
+                    <column id="date"/>
+                    <column id="customer"/>
+                </columns>
+            </table>
+    </layout>
+</window>
