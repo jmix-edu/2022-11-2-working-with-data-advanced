@@ -16,6 +16,31 @@
                 </query>
             </loader>
         </collection>
+        <collection id="lastWeekTimeEntriesDc"
+                    class="com.company.jmixpm.entity.TimeEntry">
+            <fetchPlan extends="_base">
+                <property name="task" fetchPlan="_base"/>
+                <property name="user" fetchPlan="_base"/>
+            </fetchPlan>
+            <loader id="lastWeekTimeEntriesDl">
+                <query>
+                    <![CDATA[select e from TimeEntry e where @between(e.entryDate, now-7, now, day)]]>
+                </query>
+            </loader>
+        </collection>
+        <collection id="currentWeekTimeEntriesDc"
+                    class="com.company.jmixpm.entity.TimeEntry">
+            <fetchPlan extends="_base">
+                <property name="task" fetchPlan="_base"/>
+                <property name="user" fetchPlan="_base"/>
+            </fetchPlan>
+            <loader id="currentWeekTimeEntriesDl">
+                <query>
+                    <![CDATA[select e from TimeEntry e where e.entryDate >= FIRST_DAY_OF_CURRENT_WEEK
+                                    and e.entryDate <= LAST_DAY_OF_CURRENT_WEEK]]>
+                </query>
+            </loader>
+        </collection>
     </data>
     <facets>
         <dataLoadCoordinator auto="true"/>
@@ -33,34 +58,87 @@
     </actions>
     <dialogMode height="600"
                 width="800"/>
-    <layout expand="timeEntriesTable" spacing="true">
-        <filter id="filter"
-                dataLoader="timeEntriesDl">
-            <properties include=".*"/>
-        </filter>
-        <groupTable id="timeEntriesTable"
-                    width="100%"
-                    dataContainer="timeEntriesDc">
-            <actions>
-                <action id="create" type="create"/>
-                <action id="edit" type="edit"/>
-                <action id="remove" type="remove"/>
-            </actions>
-            <columns>
-                <column id="task"/>
-                <column id="timeSpent"/>
-                <column id="entryDate"/>
-                <column id="user"/>
-                <column id="description"/>
-            </columns>
-            <simplePagination/>
-            <buttonsPanel id="buttonsPanel"
-                          alwaysVisible="true">
-                <button id="createBtn" action="timeEntriesTable.create"/>
-                <button id="editBtn" action="timeEntriesTable.edit"/>
-                <button id="removeBtn" action="timeEntriesTable.remove"/>
-            </buttonsPanel>
-        </groupTable>
+    <layout expand="tabSheet" spacing="true">
+        <tabSheet id="tabSheet" width="100%">
+            <tab id="browseTab" caption="Browse tab" expand="timeEntriesTable" spacing="true">
+                <filter id="filter"
+                        dataLoader="timeEntriesDl">
+                    <properties include=".*"/>
+                </filter>
+                <groupTable id="timeEntriesTable"
+                            width="100%"
+                            dataContainer="timeEntriesDc">
+                    <actions>
+                        <action id="create" type="create"/>
+                        <action id="edit" type="edit"/>
+                        <action id="remove" type="remove"/>
+                    </actions>
+                    <columns>
+                        <column id="task"/>
+                        <column id="timeSpent"/>
+                        <column id="entryDate"/>
+                        <column id="user"/>
+                        <column id="description"/>
+                    </columns>
+                    <simplePagination/>
+                    <buttonsPanel id="buttonsPanel"
+                                  alwaysVisible="true">
+                        <button id="createBtn" action="timeEntriesTable.create"/>
+                        <button id="editBtn" action="timeEntriesTable.edit"/>
+                        <button id="removeBtn" action="timeEntriesTable.remove"/>
+                    </buttonsPanel>
+                </groupTable>
+            </tab>
+            <tab id="lastWeekTab"
+                 caption="Last week"
+                 margin="true"
+                 expand="lastWeekTimeEntriesTable">
+                <groupTable id="lastWeekTimeEntriesTable"
+                            width="100%"
+                            dataContainer="lastWeekTimeEntriesDc">
+                    <actions>
+                        <action id="refresh" type="refresh"/>
+                    </actions>
+                    <columns>
+                        <column id="task"/>
+                        <column id="timeSpent"/>
+                        <column id="entryDate"/>
+                        <column id="user"/>
+                        <column id="description"/>
+                    </columns>
+                    <simplePagination/>
+                    <buttonsPanel id="lastWeekButtonsPanel"
+                                  alwaysVisible="true">
+                        <button id="refreshBtn" action="lastWeekTimeEntriesTable.refresh"/>
+                    </buttonsPanel>
+                </groupTable>
+            </tab>
+            <tab id="currentWeekTab"
+                 caption="Current week"
+                 margin="true"
+                 expand="currentWeekTimeEntriesTable">
+                <groupTable id="currentWeekTimeEntriesTable"
+                            width="100%"
+                            dataContainer="currentWeekTimeEntriesDc">
+                    <actions>
+                        <action id="refresh" type="refresh"/>
+                    </actions>
+                    <columns>
+                        <column id="task"/>
+                        <column id="timeSpent"/>
+                        <column id="entryDate"/>
+                        <column id="user"/>
+                        <column id="description"/>
+                    </columns>
+                    <simplePagination/>
+                    <buttonsPanel id="currentWeekButtonsPanel"
+                                  alwaysVisible="true">
+                        <button id="currentWeekRefreshBtn" action="currentWeekTimeEntriesTable.refresh"/>
+                    </buttonsPanel>
+                </groupTable>
+            </tab>
+        </tabSheet>
+
         <hbox id="lookupActions" spacing="true" visible="false">
             <button action="lookupSelectAction"/>
             <button action="lookupCancelAction"/>

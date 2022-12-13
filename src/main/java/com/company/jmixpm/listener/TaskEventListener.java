@@ -13,14 +13,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
-@Component
+//@Component
 public class TaskEventListener {
     private static final Logger log = LoggerFactory.getLogger(TaskEventListener.class);
 
     @Autowired
     private DataManager dataManager;
 
-    @EventListener
+//    @EventListener
     public void onTaskChangedBeforeCommit(EntityChangedEvent<Task> event) {
         Project project;
         if (event.getType() == EntityChangedEvent.Type.DELETED) {

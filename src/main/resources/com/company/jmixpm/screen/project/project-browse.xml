@@ -15,6 +15,7 @@
                 </query>
             </loader>
         </collection>
+        <!-- where function('actual_efforts', e.id) > e.totalEstimatedEfforts -->
     </data>
     <facets>
         <dataLoadCoordinator auto="true"/>

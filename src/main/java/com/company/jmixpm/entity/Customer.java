@@ -32,13 +32,25 @@ public class Customer {
     @Column(name = "PROJECT_ID")
     private UUID projectId;
 
+    @OneToMany(mappedBy = "customer")
+    private List<Order> orders;
+
     @DependsOnProperties({"projectId"})
     @JmixProperty
     @Transient
     private Project project;
 
-    @OneToMany(mappedBy = "customer")
-    private List<Order> orders;
+    @Column(name = "VERSION", nullable = false)
+    @Version
+    private Integer version;
+
+    public Integer getVersion() {
+        return version;
+    }
+
+    public void setVersion(Integer version) {
+        this.version = version;
+    }
 
     public List<Order> getOrders() {
         return orders;

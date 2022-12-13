@@ -4,6 +4,9 @@ import com.company.jmixpm.entity.Project;
 import com.company.jmixpm.entity.ProjectStats;
 import com.company.jmixpm.entity.Task;
 import io.jmix.core.DataManager;
+import io.jmix.core.FetchPlan;
+import io.jmix.core.FetchPlanRepository;
+import io.jmix.core.FetchPlans;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -17,9 +20,17 @@ public class ProjectStatsService {
 
     @Autowired
     private DataManager dataManager;
+    @Autowired
+    private FetchPlans fetchPlans;
+    @Autowired
+    private FetchPlanRepository fetchPlanRepository;
 
     public List<ProjectStats> fetchProjectStats() {
-        List<Project> projects = dataManager.load(Project.class).all().list();
+        List<Project> projects = dataManager.load(Project.class)
+                .all()
+                .fetchPlan("projects-with-tasks")
+                .list();
+
         List<ProjectStats> projectStats = projects.stream()
                 .map(project -> {
                     ProjectStats stats = dataManager.create(ProjectStats.class);
@@ -47,5 +58,13 @@ public class ProjectStatsService {
                 .parameter("projectId", projectId)
                 .optional();
         return actualEffortsOpt.orElse(0);
+    }
+
+    private FetchPlan createFetchPlanWithTasks() {
+        return fetchPlans.builder(Project.class)
+                .addFetchPlan(FetchPlan.INSTANCE_NAME)
+                .add("tasks", fetchPlanBuilder -> {
+                    fetchPlanBuilder.add("estimatedEfforts").add("startDate");
+                }).build();
     }
 }

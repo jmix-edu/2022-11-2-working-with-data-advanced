@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<window xmlns="http://jmix.io/schema/ui/window"
+        caption="msg://userProjectsDialog.caption">
+    <data>
+        <collection id="projectsDc"
+                    class="com.company.jmixpm.entity.Project">
+            <fetchPlan extends="_base">
+                <property name="manager" fetchPlan="_instance_name"/>
+            </fetchPlan>
+            <loader id="projectsDl">
+                <query>
+                    <![CDATA[select e from Project e where
+                        (select u from User u where u =:user) MEMBER OF e.participants or e.manager = :user]]>
+                </query>
+            </loader>
+        </collection>
+    </data>
+    <dialogMode width="800px" height="600px" forceDialog="true"/>
+    <layout expand="projectsTable">
+        <table id="projectsTable"
+               dataContainer="projectsDc"
+               width="100%">
+            <columns>
+                <column id="name"/>
+                <column id="startDate"/>
+                <column id="endDate"/>
+                <column id="manager"/>
+            </columns>
+        </table>
+    </layout>
+</window>

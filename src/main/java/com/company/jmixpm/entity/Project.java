@@ -12,6 +12,7 @@ import io.jmix.core.metamodel.annotation.Composition;
 import io.jmix.core.metamodel.annotation.InstanceName;
 import io.jmix.core.metamodel.annotation.JmixEntity;
 import io.jmix.core.metamodel.annotation.PropertyDatatype;
+import io.jmix.core.pessimisticlocking.PessimisticLock;
 import io.jmix.core.validation.group.UiCrossFieldChecks;
 
 import javax.persistence.*;
@@ -21,6 +22,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+@PessimisticLock(timeoutSec = 10)
 @ValidDateProject(groups = UiCrossFieldChecks.class)
 @JmixEntity
 @Table(name = "PROJECT", indexes = {
