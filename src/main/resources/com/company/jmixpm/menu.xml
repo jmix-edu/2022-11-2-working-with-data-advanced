@@ -18,6 +18,8 @@
         <item screen="Order_.browse" caption="msg://com.company.jmixpm.screen.order/orderBrowse.menu"/>
         <item screen="CustomerSearchScreen"
               caption="msg://com.company.jmixpm.screen.customersearch/customerSearchScreen.caption"/>
+        <item screen="TimeEntryMasterDetail"
+              caption="msg://com.company.jmixpm.screen.timeentry/timeEntryMasterDetail.menu"/>
     </menu>
 
 </menu-config>
